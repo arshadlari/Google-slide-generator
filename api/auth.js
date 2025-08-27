@@ -3,9 +3,31 @@ import cookie from "cookie";
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/api/auth`
-  : "http://localhost:3000/api/auth";
+// Handle different deployment environments
+const getRedirectUri = () => {
+  // Check for custom environment variable first
+  if (process.env.GOOGLE_REDIRECT_URI) {
+    return process.env.GOOGLE_REDIRECT_URI;
+  }
+
+  // Vercel deployment
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api/auth`;
+  }
+
+  // Local development
+  return "http://localhost:3000/api/auth";
+};
+
+const REDIRECT_URI = getRedirectUri();
+
+// Debug logging to help troubleshoot
+console.log("OAuth Environment:", {
+  VERCEL_URL: process.env.VERCEL_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  REDIRECT_URI: REDIRECT_URI,
+  CUSTOM_REDIRECT: process.env.GOOGLE_REDIRECT_URI,
+});
 
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID,
