@@ -62,6 +62,7 @@ export default async function handler(req, res) {
 
   // Step 3: Profile API
   if (query.profile) {
+    console.log("Profile API called");
     const cookies = cookie.parse(req.headers.cookie || "");
     if (cookies.user) {
       res.status(200).json(JSON.parse(cookies.user));
