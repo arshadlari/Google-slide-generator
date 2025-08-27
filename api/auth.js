@@ -7,6 +7,12 @@ const REDIRECT_URI = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}/api/auth`
   : "http://localhost:5173/api/auth";
 
+// Debug logging
+console.log("Environment variables:", {
+  VERCEL_URL: process.env.VERCEL_URL,
+  REDIRECT_URI: REDIRECT_URI,
+});
+
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID,
   CLIENT_SECRET,
