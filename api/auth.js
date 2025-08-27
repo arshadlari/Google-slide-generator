@@ -5,7 +5,7 @@ const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}/api/auth`
-  : "http://localhost:5173/api/auth";
+  : "http://localhost:3000/api/auth";
 
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -20,7 +20,11 @@ export default async function handler(req, res) {
   if (!query.code && !query.profile) {
     const url = oauth2Client.generateAuthUrl({
       access_type: "offline",
-      scope: ["profile", "email"],
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/presentations",
+      ],
     });
     res.writeHead(302, { Location: url });
     res.end();
@@ -35,12 +39,20 @@ export default async function handler(req, res) {
     const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
     const { data } = await oauth2.userinfo.get();
 
+    // Store both user data and tokens
+    const userData = {
+      ...data,
+      tokens: tokens,
+    };
+
     res.setHeader(
       "Set-Cookie",
-      cookie.serialize("user", JSON.stringify(data), {
+      cookie.serialize("user", JSON.stringify(userData), {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
         path: "/",
-        maxAge: 60 * 60,
+        maxAge: 60 * 60 * 24, // 24 hours
       })
     );
     res.writeHead(302, { Location: "/dashboard" });
