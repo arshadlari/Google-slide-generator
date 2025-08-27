@@ -1,0 +1,86 @@
+.login-container {
+    position: relative;
+    width: 440px;
+    height: 550px;
+    background: #fbbc04;
+    /* Google Slides yellow */
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+/* Folded top-right corner */
+.login-container::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    border-top: 110px solid white;
+    /* darker fold */
+    border-left: 110px solid #e59400;
+    width: 0;
+    height: 0;
+}
+
+
+
+/* Put content (login form) above everything */
+.login-header,
+.login-form {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    width: 80%;
+    color: #202124;
+}
+
+/* Title */
+.login-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 8rem;
+}
+
+.login-subtitle {
+    font-size: 0.9rem;
+    color: #3c4043;
+    text-align: center;
+}
+
+/* Google-style Sign In button */
+.login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    background: #fff;
+    color: #3c4043;
+    font-weight: 500;
+    font-size: 0.95rem;
+
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 280px;
+    margin: 1.2rem auto 0 auto;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:hover:not(:disabled) {
+    background: #f7f8f8;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.login-button img {
+    width: 20px;
+    height: 20px;
+}
