@@ -22,6 +22,10 @@ export default function Dashboard() {
       });
   }, []);
 
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>Loading...</div>
@@ -48,6 +52,22 @@ export default function Dashboard() {
             alt="Profile"
             style={{ borderRadius: "50%", width: "80px", height: "80px" }}
           />
+          <br />
+          <button
+            onClick={handleLogout}
+            style={{
+              marginTop: "20px",
+              padding: "10px 20px",
+              fontSize: "14px",
+              backgroundColor: "#dc3545",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Logout
+          </button>
         </div>
       )}
     </div>
