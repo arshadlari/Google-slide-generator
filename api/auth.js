@@ -71,8 +71,8 @@ export default async function handler(req, res) {
       "Set-Cookie",
       cookie.serialize("user", JSON.stringify(userData), {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true, // Always use secure in production
+        sameSite: "lax", // Changed from "strict" to "lax" for better compatibility
         path: "/",
         maxAge: 60 * 60 * 24, // 24 hours
       })
@@ -85,11 +85,29 @@ export default async function handler(req, res) {
   // Step 3: Profile API
   if (query.profile) {
     console.log("Profile API called");
+    console.log("Headers:", req.headers);
+    console.log("Raw Cookie Header:", req.headers.cookie);
+
     const cookies = cookie.parse(req.headers.cookie || "");
+    console.log("Parsed Cookies:", Object.keys(cookies));
+    console.log("User Cookie Exists:", !!cookies.user);
+
     if (cookies.user) {
-      res.status(200).json(JSON.parse(cookies.user));
+      try {
+        const userData = JSON.parse(cookies.user);
+        console.log("User data found:", {
+          id: userData.id,
+          name: userData.name,
+        });
+        res.status(200).json(userData);
+      } catch (error) {
+        console.error("Error parsing user cookie:", error);
+        res.status(401).json({ error: "Invalid user data" });
+      }
     } else {
+      console.log("No user cookie found");
       res.status(401).json({ error: "Not authenticated" });
     }
+    return;
   }
 }
