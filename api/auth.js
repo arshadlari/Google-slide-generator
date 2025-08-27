@@ -20,6 +20,7 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 export default async function handler(req, res) {
+  console.log("Auth handler called");
   const { query } = req;
 
   // If no code, redirect to Google
